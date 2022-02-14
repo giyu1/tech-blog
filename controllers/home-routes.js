@@ -1,32 +1,10 @@
 const router = require('express').Router();
-const { Blog, Painting } = require('../models');
+const { Blog, Comments } = require('../models');
 // Import the custom middleware
 const withAuth = require('../utils/auth');
 
 // GET all galleries for homepage
 router.get('/', async (req, res) => {
-  // try {
-  //   const dbBlogData = await Blog.findAll({
-  //     include: [
-  //       {
-  //         model: Painting,
-  //         attributes: ['filename', 'description'],
-  //       },
-  //     ],
-  //   });
-
-  //   const galleries = dbBlogData.map((Blog) =>
-  //     Blog.get({ plain: true })
-  //   );
-
-  //   res.render('homepage', {
-  //     galleries,
-  //     loggedIn: req.session.loggedIn,
-  //   });
-  // } catch (err) {
-  //   console.log(err);
-  //   res.status(500).json(err);
-  // }
   res.render("homepage")
 });
 
@@ -37,7 +15,7 @@ router.get('/Blog/:id', withAuth, async (req, res) => {
     const dbBlogData = await Blog.findByPk(req.params.id, {
       include: [
         {
-          model: Painting,
+          model: Comments,
           attributes: [
             'id',
             'title',
@@ -58,15 +36,15 @@ router.get('/Blog/:id', withAuth, async (req, res) => {
   }
 });
 
-// GET one painting
-// Use the custom middleware before allowing the user to access the painting
-router.get('/painting/:id', withAuth, async (req, res) => {
+// GET one Comments
+// Use the custom middleware before allowing the user to access the Comments
+router.get('/Comments/:id', withAuth, async (req, res) => {
   try {
-    const dbPaintingData = await Painting.findByPk(req.params.id);
+    const dbCommentsData = await Comments.findByPk(req.params.id);
 
-    const painting = dbPaintingData.get({ plain: true });
+    const Comments = dbCommentsData.get({ plain: true });
 
-    res.render('painting', { painting, loggedIn: req.session.loggedIn });
+    res.render('Comments', { Comments, loggedIn: req.session.loggedIn });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
